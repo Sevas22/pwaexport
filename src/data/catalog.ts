@@ -168,6 +168,12 @@ export const allyTypes: AllyType[] = [
   { id: "3pl", name: "3PL", plural: "3PL", description: "Almacenamiento y distribución tercerizada." },
   { id: "fulfillment", name: "Fulfillment", plural: "Fulfillment", description: "Bodega, alistamiento y despacho en destino." },
   { id: "broker", name: "Broker internacional", plural: "Brokers", description: "Agente de aduanas en el país de destino." },
+  {
+    id: "comercializadora",
+    name: "Comercializadora internacional",
+    plural: "Comercializadoras",
+    description: "Acompañan la operación completa: compradores, documentos, logística y estructuración del negocio.",
+  },
 ];
 
 const byId = <T extends { id: string }>(items: T[]) =>

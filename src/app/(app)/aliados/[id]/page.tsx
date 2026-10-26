@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowUpRight, Check, Clock, Globe, ListChecks, MapPin, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Check, Clock, Globe, Info, ListChecks, MapPin, Phone, Sparkles } from "lucide-react";
 import { Flag } from "@/components/Flag";
 import { allyTypeIcons } from "@/components/icons";
 import { ReferButton } from "@/components/referrals/ReferButton";
@@ -48,9 +48,9 @@ export default async function AllyPage({ params }: PageProps<"/aliados/[id]">) {
           )}
         </div>
         <div className="relative px-5 pb-6 sm:px-8">
-          <div className="-mt-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
-              <Avatar name={ally.name} size="lg" className="size-20 text-2xl ring-4 ring-card" />
+          <Avatar name={ally.name} size="lg" className="-mt-10 size-20 text-2xl ring-4 ring-card" />
+          <div className="mt-4 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+            <div>
               <div>
                 <p className="flex items-center gap-1.5 text-sm font-medium text-seal">
                   <TypeIcon className="size-4" aria-hidden />
@@ -62,10 +62,29 @@ export default async function AllyPage({ params }: PageProps<"/aliados/[id]">) {
                     <MapPin className="size-4" aria-hidden />
                     {ally.city}, {ally.country}
                   </span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="size-4" aria-hidden />
-                    {ally.responseTime}
-                  </span>
+                  {ally.responseTime && (
+                    <span className="flex items-center gap-1">
+                      <Clock className="size-4" aria-hidden />
+                      {ally.responseTime}
+                    </span>
+                  )}
+                  {ally.website && (
+                    <a
+                      href={ally.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 text-seal hover:underline"
+                    >
+                      <Globe className="size-4" aria-hidden />
+                      {new URL(ally.website).hostname.replace("www.", "")}
+                    </a>
+                  )}
+                  {ally.phone && (
+                    <span className="flex items-center gap-1">
+                      <Phone className="size-4" aria-hidden />
+                      {ally.phone}
+                    </span>
+                  )}
                 </p>
               </div>
             </div>
@@ -73,6 +92,13 @@ export default async function AllyPage({ params }: PageProps<"/aliados/[id]">) {
           </div>
         </div>
       </Card>
+
+      {ally.isDemo && (
+        <p className="mt-4 flex items-center gap-2 rounded-xl border border-amber/25 bg-amber-tint px-3 py-2 text-sm text-amber">
+          <Info className="size-4 shrink-0" aria-hidden />
+          Perfil de ejemplo: los datos de contacto de esta ficha son ficticios.
+        </p>
+      )}
 
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <div className="flex flex-col gap-6">

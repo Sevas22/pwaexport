@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, ChevronRight, Clock, Copy, FileText, Mail, MessageCircle, Sparkles, X } from "lucide-react";
 import { allyTypeIcons } from "@/components/icons";
-import { Avatar, Field, Input, Select, Textarea, buttonStyles, cn } from "@/components/ui";
+import { SelectMenu } from "@/components/SelectMenu";
+import { Avatar, Field, Input, Textarea, buttonStyles, cn } from "@/components/ui";
 import { allies, getAlly } from "@/data/allies";
 import { getAllyType } from "@/data/catalog";
 import { alliesFor, getDocument } from "@/lib/requirements";
@@ -170,10 +171,12 @@ function ReferFlow({ context, onClose }: { context: ReferContext; onClose: () =>
                           <TypeIcon className="size-3.5" aria-hidden />
                           {getAllyType(option.type).name} · {option.city}
                         </span>
-                        <span className="flex items-center gap-1">
-                          <Clock className="size-3.5" aria-hidden />
-                          {option.responseTime}
-                        </span>
+                        {option.responseTime && (
+                          <span className="flex items-center gap-1">
+                            <Clock className="size-3.5" aria-hidden />
+                            {option.responseTime}
+                          </span>
+                        )}
                       </span>
                     </span>
                     <ChevronRight className="size-5 shrink-0 text-muted transition group-hover:translate-x-0.5 group-hover:text-seal" aria-hidden />
@@ -192,7 +195,7 @@ function ReferFlow({ context, onClose }: { context: ReferContext; onClose: () =>
             <div className="min-w-0">
               <p className="truncate font-semibold">{ally.name}</p>
               <p className="text-sm text-muted">
-                {getAllyType(ally.type).name} · {ally.city} · {ally.responseTime}
+                {[getAllyType(ally.type).name, ally.city, ally.responseTime].filter(Boolean).join(" · ")}
               </p>
             </div>
           </div>
@@ -211,14 +214,17 @@ function ReferFlow({ context, onClose }: { context: ReferContext; onClose: () =>
           )}
           {!context.operationId && operations.length > 0 && (
             <Field label="Operación relacionada">
-              <Select value={operationId} onChange={(event) => setOperationId(event.target.value)}>
-                <option value="">Sin operación</option>
-                {operations.map((op) => (
-                  <option key={op.id} value={op.id}>
-                    {op.code} · {op.product}
-                  </option>
-                ))}
-              </Select>
+              <SelectMenu
+                label="Operación relacionada"
+                value={operationId}
+                onChange={setOperationId}
+                options={[
+                  { value: "", label: "Sin operación" },
+                  ...operations.map((op) => ({ value: op.id, label: `${op.code} · ${op.product}` })),
+                ]}
+                buttonClassName="h-11 w-full justify-between rounded-xl border border-rule bg-card px-3.5 text-left text-ink hover:border-muted/40"
+                menuClassName="w-full max-w-[calc(100vw-4rem)]"
+              />
             </Field>
           )}
           <Field label="Mensaje para el aliado">

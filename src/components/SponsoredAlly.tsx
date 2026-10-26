@@ -29,7 +29,7 @@ export function SponsoredAlly({
 
   return (
     <aside
-      className={cn("relative overflow-hidden rounded-2xl border border-amber/25 bg-card shadow-card", className)}
+      className={cn("relative overflow-hidden rounded-2xl border border-amber/25 bg-card shadow-card print:hidden", className)}
       aria-label="Aliado patrocinado"
     >
       <div aria-hidden className="absolute -top-10 -right-10 size-32 rounded-full bg-amber/10 blur-2xl" />
@@ -55,10 +55,12 @@ export function SponsoredAlly({
             </li>
           ))}
         </ul>
-        <p className="mt-3 flex items-center gap-1.5 text-xs text-muted">
-          <Clock className="size-3.5" aria-hidden />
-          {ally.responseTime}
-        </p>
+        {ally.responseTime && (
+          <p className="mt-3 flex items-center gap-1.5 text-xs text-muted">
+            <Clock className="size-3.5" aria-hidden />
+            {ally.responseTime}
+          </p>
+        )}
         <Link
           href={`/aliados/${ally.id}`}
           className="mt-4 flex h-10 items-center justify-center gap-1.5 rounded-xl bg-navy text-sm font-medium text-white transition hover:bg-navy-2"

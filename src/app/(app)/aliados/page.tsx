@@ -17,7 +17,7 @@ export default function AlliesPage() {
       />
       <p className="mt-5 inline-flex items-center gap-2 rounded-xl border border-amber/25 bg-amber-tint px-3 py-2 text-sm text-amber">
         <Info className="size-4 shrink-0" aria-hidden />
-        Directorio de demostración: los nombres y contactos son ficticios.
+        Las fichas marcadas como «Ejemplo» son perfiles de muestra con datos ficticios. El resto son aliados del ecosistema.
       </p>
       <Suspense fallback={<Loading />}>
         <AllyDirectory />

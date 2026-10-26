@@ -14,7 +14,7 @@ export function TopBar() {
   const profile = useAppStore((state) => state.profile);
 
   return (
-    <div className="sticky top-0 z-20 hidden h-16 items-center justify-between border-b border-rule bg-paper/85 px-10 backdrop-blur lg:flex">
+    <div className="sticky top-0 z-20 hidden h-16 items-center justify-between border-b border-rule bg-paper/85 px-10 backdrop-blur lg:flex print:hidden">
       <p className="text-sm text-muted first-letter:uppercase">{hydrated ? today() : " "}</p>
       <div className="flex items-center gap-4">
         <span className="inline-flex items-center gap-1.5 rounded-full border border-amber/30 bg-amber-tint px-3 py-1 text-xs font-medium text-amber">

@@ -16,6 +16,26 @@ Requiere Node 20.9 o superior. Se recomienda Node 20.19 o superior, que es lo qu
 
 La primera vez que se abre la app se cargan una empresa, 3 operaciones y 4 referidos ficticios (`src/data/demo.ts`), para que el demo no se vea vacío. En **Mi empresa** puedes restablecerlos o empezar sin datos.
 
+## Agente de IA e informes
+
+El buscador del inicio recibe el nombre del producto o su partida arancelaria y el mercado de destino, y genera un informe de exportación.
+
+1. `POST /api/informe` (`src/app/api/informe/route.ts`) recibe la consulta.
+2. El agente (`src/lib/agent/`) clasifica el producto en el Sistema Armonizado y redacta el informe **sobre nuestra base documental**, que se le entrega como contexto para que no invente requisitos.
+3. El usuario ve gratis la clasificación y los hallazgos clave; para abrir el informe completo crea una cuenta, y el informe queda guardado en ella.
+
+Motor: **Groq** (`GROQ_API_KEY`). Sin clave, el informe se arma con la base de conocimiento propia (`src/lib/agent/fallback.ts`), así el demo nunca se cae. El informe indica siempre cómo se generó.
+
+## Cuentas y base de datos
+
+Autenticación y datos en **Supabase**:
+
+1. Crea un proyecto en [supabase.com](https://supabase.com).
+2. Abre **SQL Editor** y ejecuta `supabase/schema.sql` (perfiles, informes, operaciones y referidos, con políticas RLS por usuario).
+3. Copia `.env.example` a `.env.local` y completa `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+
+Sin esas variables la app funciona en modo demostración: el registro ocurre igual, pero la cuenta y los informes se guardan solo en el dispositivo.
+
 ## Cómo el código refleja el modelo de negocio
 
 | Pieza del modelo | Dónde está |
@@ -24,14 +44,18 @@ La primera vez que se abre la app se cargan una empresa, 3 operaciones y 4 refer
 | Mercados (EE. UU., Canadá, UE, China, Medio Oriente, Latinoamérica) | `src/data/catalog.ts` (`markets`) |
 | Base de conocimiento documental | `src/data/documents.ts` (40 documentos en 5 etapas, con reglas por modo, mercado y categoría) |
 | Motor de requisitos | `src/lib/requirements.ts` (`documentsFor`, `groupByStage`, `alliesFor`) |
-| Aliados estratégicos (15 tipos) | `src/data/catalog.ts` (`allyTypes`) y `src/data/allies.ts` (directorio **ficticio**) |
+| Aliados estratégicos (16 tipos) | `src/data/catalog.ts` (`allyTypes`) y `src/data/allies.ts` (empresas reales del ecosistema + perfiles de muestra marcados con `isDemo`) |
 | Referidos a agencias | `src/components/referrals/ReferDialog.tsx`, `src/lib/referrals.ts` |
 | Módulos TM Core (en la app, con aliados, próximamente) | `src/data/modules.ts` |
 | Venta de espacios publicitarios | `Ally.sponsored` + `src/components/SponsoredAlly.tsx` (anuncio según el servicio y el mercado) |
+| Informe del agente de IA | `src/lib/agent/` + `src/app/api/informe/route.ts` + `src/components/report/ReportView.tsx` |
+| Cuentas de usuario | `src/lib/auth.tsx`, `src/lib/supabase/`, `supabase/schema.sql` |
 
 ## Pantallas
 
-- `/`: landing con consulta en vivo ("Exporto ___ a ___ vía ___").
+- `/`: buscador principal (producto o partida arancelaria + mercado) y landing del servicio.
+- `/informe`: informe del agente con resumen gratis y registro para abrirlo completo.
+- `/informes`: historial de informes de la cuenta.
 - `/panel`: operaciones en curso, referidos recientes y módulos TM Core.
 - `/documentos`: asistente documental. La selección queda en la URL para compartirla. Cada documento tiene su ficha en `/documentos/[id]`.
 - `/operaciones`: expedientes de exportación con checklist por documento (pendiente, en trámite, listo, no aplica).

@@ -1,6 +1,7 @@
 "use client";
 
-import { ChevronDown } from "lucide-react";
+import { Flag } from "@/components/Flag";
+import { SelectMenu, type SelectOption } from "@/components/SelectMenu";
 import {
   categories,
   isCategoryId,
@@ -68,26 +69,24 @@ export function ExportSentence({ value, onChange, size = "compact" }: ExportSent
         hero={hero}
         value={value.category}
         onChange={(category) => onChange(normalizeSelection({ ...value, category }))}
-      >
-        {categories.map((category) => (
-          <option key={category.id} value={category.id}>
-            {category.name.toLowerCase()}
-          </option>
-        ))}
-      </InlineSelect>
+        options={categories.map((category) => ({
+          value: category.id,
+          label: category.name.toLowerCase(),
+          hint: category.examples.split(",")[0],
+        }))}
+      />
       <span>a</span>
       <InlineSelect
         label="Mercado de destino"
         hero={hero}
         value={value.market}
         onChange={(market) => onChange(normalizeSelection({ ...value, market }))}
-      >
-        {markets.map((market) => (
-          <option key={market.id} value={market.id}>
-            {market.name}
-          </option>
-        ))}
-      </InlineSelect>
+        options={markets.map((market) => ({
+          value: market.id,
+          label: market.name,
+          icon: <Flag market={market.id} className="h-3.5 w-5" />,
+        }))}
+      />
       <span>vía</span>
       <InlineSelect
         label="Ruta y modo de envío"
@@ -97,17 +96,14 @@ export function ExportSentence({ value, onChange, size = "compact" }: ExportSent
           const [route, mode] = combined.split(":");
           onChange(normalizeSelection({ ...value, route, mode }));
         }}
-      >
-        {routes.map((route) => (
-          <optgroup key={route.id} label={route.name}>
-            {modesFor(route.id, value.market).map((mode) => (
-              <option key={mode} value={`${route.id}:${mode}`}>
-                {modeLabels[mode].toLowerCase()}
-              </option>
-            ))}
-          </optgroup>
-        ))}
-      </InlineSelect>
+        options={routes.flatMap((route) =>
+          modesFor(route.id, value.market).map((mode) => ({
+            value: `${route.id}:${mode}`,
+            label: modeLabels[mode].toLowerCase(),
+            group: route.name,
+          })),
+        )}
+      />
     </p>
   );
 }
@@ -117,31 +113,26 @@ function InlineSelect({
   value,
   onChange,
   hero,
-  children,
+  options,
 }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
   hero: boolean;
-  children: React.ReactNode;
+  options: SelectOption[];
 }) {
   return (
-    <span className="relative inline-flex max-w-full items-center">
-      <select
-        aria-label={label}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        className={cn(
-          "max-w-full cursor-pointer appearance-none truncate border-b-2 border-seal bg-transparent pr-7 text-seal [field-sizing:content] hover:border-seal-strong hover:text-seal-strong focus:outline-none focus-visible:rounded-sm",
-          hero ? "pb-0.5" : "pb-0 font-medium",
-        )}
-      >
-        {children}
-      </select>
-      <ChevronDown
-        aria-hidden
-        className={cn("pointer-events-none absolute right-0 text-seal", hero ? "size-6" : "size-4")}
-      />
-    </span>
+    <SelectMenu
+      label={label}
+      value={value}
+      options={options}
+      onChange={onChange}
+      className="inline-flex max-w-full align-baseline"
+      buttonClassName={cn(
+        "max-w-full border-b-2 border-seal text-seal hover:border-seal-strong hover:text-seal-strong focus-visible:rounded-sm",
+        hero ? "pb-0.5" : "pb-0 font-medium",
+      )}
+      menuClassName="min-w-56 text-base font-normal tracking-normal text-ink"
+    />
   );
 }

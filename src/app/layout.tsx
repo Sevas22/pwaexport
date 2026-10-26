@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { ClientBoot } from "@/components/pwa/ClientBoot";
+import { AuthProvider } from "@/lib/auth";
 import "./globals.css";
 
 const archivo = Archivo({
@@ -45,7 +46,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${archivo.variable} ${plexSans.variable} ${plexMono.variable} h-full antialiased`}
     >
       <body className="min-h-full">
-        {children}
+        <AuthProvider>{children}</AuthProvider>
         <ClientBoot />
       </body>
     </html>

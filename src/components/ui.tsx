@@ -33,7 +33,7 @@ export function Field({
   children,
   className,
 }: {
-  label: string;
+  label: ReactNode;
   hint?: string;
   children: ReactNode;
   className?: string;
@@ -49,10 +49,6 @@ export function Field({
 
 export function Input({ className, ...props }: ComponentProps<"input">) {
   return <input className={cn(control, "h-11", className)} {...props} />;
-}
-
-export function Select({ className, ...props }: ComponentProps<"select">) {
-  return <select className={cn(control, "h-11 pr-8", className)} {...props} />;
 }
 
 export function Textarea({ className, ...props }: ComponentProps<"textarea">) {

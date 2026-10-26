@@ -6,7 +6,9 @@ import { ArrowRight, Route, Ship } from "lucide-react";
 import { ExportSentence, normalizeSelection } from "@/components/documents/ExportSentence";
 import { ManifestStrip } from "@/components/documents/ManifestStrip";
 import { stageIcons } from "@/components/icons";
-import { Card, Field, IconTile, Input, Select, buttonStyles } from "@/components/ui";
+import { Term } from "@/components/Term";
+import { SelectMenu } from "@/components/SelectMenu";
+import { Card, Field, IconTile, Input, buttonStyles } from "@/components/ui";
 import { getMarket } from "@/data/catalog";
 import { documentsFor, groupByStage } from "@/lib/requirements";
 import { useAppStore } from "@/lib/store";
@@ -38,9 +40,10 @@ export function NewOperationForm() {
       mode: params.get("modo"),
     }),
   );
-  const [product, setProduct] = useState("");
-  const [hsCode, setHsCode] = useState("");
-  const [destinationCountry, setDestinationCountry] = useState("");
+  // Prellenado cuando la operación nace de un informe del agente.
+  const [product, setProduct] = useState(() => params.get("producto") ?? "");
+  const [hsCode, setHsCode] = useState(() => params.get("partida") ?? "");
+  const [destinationCountry, setDestinationCountry] = useState(() => params.get("pais") ?? "");
   const [incoterm, setIncoterm] = useState("FOB");
 
   const docs = documentsFor(selection);
@@ -98,7 +101,7 @@ export function NewOperationForm() {
                 placeholder="Ej.: Países Bajos"
               />
             </Field>
-            <Field label="Subpartida arancelaria" hint="Opcional. Un agente de aduanas te ayuda a definirla.">
+            <Field label={<Term name="subpartida">Subpartida arancelaria</Term>} hint="Opcional. Un agente de aduanas te ayuda a definirla.">
               <Input
                 inputMode="numeric"
                 value={hsCode}
@@ -107,14 +110,15 @@ export function NewOperationForm() {
                 className="font-mono"
               />
             </Field>
-            <Field label="Incoterm" hint="Define hasta dónde respondes por la mercancía." className="sm:col-span-2">
-              <Select value={incoterm} onChange={(event) => setIncoterm(event.target.value)}>
-                {incoterms.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.label}
-                  </option>
-                ))}
-              </Select>
+            <Field label={<Term name="incoterm" />} hint="Define hasta dónde respondes por la mercancía." className="sm:col-span-2">
+              <SelectMenu
+                label="Incoterm"
+                value={incoterm}
+                onChange={setIncoterm}
+                options={incoterms.map((item) => ({ value: item.id, label: item.label }))}
+                buttonClassName="h-11 w-full justify-between rounded-xl border border-rule bg-card px-3.5 text-ink hover:border-muted/40"
+                menuClassName="w-full"
+              />
             </Field>
           </div>
         </Card>

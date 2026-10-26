@@ -39,7 +39,8 @@ export type AllyTypeId =
   | "pasarela-pago"
   | "3pl"
   | "fulfillment"
-  | "broker";
+  | "broker"
+  | "comercializadora";
 
 export interface ExportRoute {
   id: RouteId;
@@ -105,9 +106,14 @@ export interface Ally {
   services: string[];
   description: string;
   email: string;
-  responseTime: string;
+  website?: string;
+  phone?: string;
+  /** Solo cuando el aliado lo publica; no se inventa. */
+  responseTime?: string;
   /** Aliados con espacio publicitario contratado. */
   sponsored: boolean;
+  /** true en los perfiles de muestra que vinieron del demo. */
+  isDemo?: boolean;
 }
 
 export interface ExportSelection {

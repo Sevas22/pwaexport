@@ -1,9 +1,71 @@
 import type { Ally } from "@/lib/types";
 
-// Directorio de demostración: nombres y contactos ficticios.
-// Reemplazar por el directorio real de agencias aliadas.
+// Directorio de aliados del ecosistema.
+// Los primeros son empresas reales: sus datos vienen de sus propios sitios web.
+// Los marcados con isDemo son perfiles de muestra que quedan del demo inicial.
 
 export const allies: Ally[] = [
+  {
+    id: "jin-global-trading",
+    name: "JIN Global Trading",
+    type: "comercializadora",
+    city: "Oficina comercial",
+    country: "Latinoamérica",
+    markets: ["us", "ca", "eu", "cn", "me", "latam"],
+    services: [
+      "Ruta exportadora y fuerza de ventas internacional",
+      "Importación de maquinaria, insumos y bienes de capital",
+      "Estructuración aduanera, logística y financiera",
+      "Financiamiento a compradores internacionales",
+      "Mecanismos especiales como Plan Vallejo",
+    ],
+    description:
+      "Comercializadora internacional que integra importaciones productivas y exportaciones para pymes y productores agroindustriales, con red de distribución en Estados Unidos, Europa, Asia, Medio Oriente y Venezuela.",
+    email: "negocios@jinglobaltrading.com",
+    phone: "+57 317 314 5264",
+    website: "https://www.jinglobaltrading.com",
+    sponsored: false,
+  },
+  {
+    id: "mercaderus-trading",
+    name: "Mercaderus Trading",
+    type: "comercializadora",
+    city: "Miami",
+    country: "Estados Unidos",
+    markets: ["us"],
+    services: [
+      "Abastecimiento de alimentos para el mercado estadounidense",
+      "Programas de contenedor FCL, LCL y carga mixta",
+      "Coordinación documental y de embarque",
+      "Revisión de empaque y presentación para el mercado",
+      "Conexión con importadores, distribuidores y cadenas de retail",
+    ],
+    description:
+      "Comercializadora especializada en exportación de alimentos hacia Estados Unidos, con coordinación logística por los puertos de Miami, Houston, Los Ángeles y Nueva Jersey.",
+    email: "sales@mercaderustrading.com",
+    website: "https://www.mercaderustrading.com",
+    sponsored: false,
+  },
+  {
+    id: "venextrading",
+    name: "Venextrading",
+    type: "marketplace",
+    city: "Caracas",
+    country: "Venezuela",
+    markets: ["us", "cn", "me", "latam"],
+    services: [
+      "Marketplace mayorista de productos venezolanos",
+      "Abastecimiento y control de calidad",
+      "Logística y despacho aduanero",
+      "Solicitudes de cotización (RFQ)",
+      "Ruedas de negocios",
+    ],
+    description:
+      "Marketplace mayorista de alimentos venezolanos que conecta vendedores y compradores, con presencia comercial en Estados Unidos, Medio Oriente y China.",
+    email: "info@venextrading.com",
+    website: "https://www.venextrading.shop",
+    sponsored: false,
+  },
   {
     id: "cordillera-aduanas",
     name: "Cordillera Aduanas SIA",
@@ -15,6 +77,7 @@ export const allies: Ally[] = [
     description: "Agencia de aduanas nivel 1 con equipo dedicado a pymes que exportan por primera vez.",
     email: "exportaciones@cordillera-aduanas.example",
     responseTime: "Responde en 4 h",
+    isDemo: true,
     sponsored: true,
   },
   {
@@ -28,6 +91,7 @@ export const allies: Ally[] = [
     description: "Operación en los terminales de Cartagena y Barranquilla, especializada en agro y alimentos.",
     email: "comercial@puertoclaro.example",
     responseTime: "Responde en 1 día",
+    isDemo: true,
     sponsored: false,
   },
   {
@@ -41,6 +105,7 @@ export const allies: Ally[] = [
     description: "Agente de carga con consolidados semanales a Miami, Róterdam y Shanghái.",
     email: "cotizaciones@rumbocarga.example",
     responseTime: "Responde en 2 h",
+    isDemo: true,
     sponsored: true,
   },
   {
@@ -54,6 +119,7 @@ export const allies: Ally[] = [
     description: "Transporte internacional por carretera hacia Ecuador, Perú y Venezuela.",
     email: "operaciones@rutaandina.example",
     responseTime: "Responde en 1 día",
+    isDemo: true,
     sponsored: false,
   },
   {
@@ -67,6 +133,7 @@ export const allies: Ally[] = [
     description: "Corredor de seguros con emisión en línea de pólizas por embarque.",
     email: "polizas@alcatrazseguros.example",
     responseTime: "Responde en 3 h",
+    isDemo: true,
     sponsored: false,
   },
   {
@@ -80,6 +147,7 @@ export const allies: Ally[] = [
     description: "Anticipa hasta el 90 % de tus facturas de exportación a compradores verificados.",
     email: "hola@liquidezexporta.example",
     responseTime: "Responde en 1 día",
+    isDemo: true,
     sponsored: true,
   },
   {
@@ -93,6 +161,7 @@ export const allies: Ally[] = [
     description: "Mesa de comercio exterior con asesoría en declaraciones de cambio.",
     email: "comex@bancomeridiano.example",
     responseTime: "Responde en 2 días",
+    isDemo: true,
     sponsored: false,
   },
   {
@@ -106,6 +175,7 @@ export const allies: Ally[] = [
     description: "Consultoría regulatoria para alimentos y cosméticos que entran a mercados exigentes.",
     email: "certificacion@selloverde.example",
     responseTime: "Responde en 1 día",
+    isDemo: true,
     sponsored: true,
   },
   {
@@ -119,6 +189,7 @@ export const allies: Ally[] = [
     description: "Inspectores en los principales puertos del Caribe colombiano.",
     email: "inspecciones@vigia.example",
     responseTime: "Responde en 6 h",
+    isDemo: true,
     sponsored: false,
   },
   {
@@ -132,6 +203,7 @@ export const allies: Ally[] = [
     description: "Courier autorizado por la DIAN con tarifas para tiendas en línea.",
     email: "tiendas@colibriexpress.example",
     responseTime: "Responde en 2 h",
+    isDemo: true,
     sponsored: false,
   },
   {
@@ -145,6 +217,7 @@ export const allies: Ally[] = [
     description: "Bodega en Doral para marcas latinoamericanas que venden en marketplaces de EE. UU.",
     email: "onboarding@bahiafulfillment.example",
     responseTime: "Responde en 1 día",
+    isDemo: true,
     sponsored: false,
   },
   {
@@ -158,6 +231,7 @@ export const allies: Ally[] = [
     description: "Broker aduanero en Róterdam con atención en español.",
     email: "latam@deltabrokers.example",
     responseTime: "Responde en 1 día",
+    isDemo: true,
     sponsored: false,
   },
   {
@@ -171,6 +245,7 @@ export const allies: Ally[] = [
     description: "Representación aduanera y regulatoria para alimentos latinoamericanos en China.",
     email: "latam@puenteoriente.example",
     responseTime: "Responde en 2 días",
+    isDemo: true,
     sponsored: false,
   },
   {
@@ -184,6 +259,7 @@ export const allies: Ally[] = [
     description: "Cobros internacionales para tiendas en línea con liquidación en Colombia.",
     email: "ventas@cobroglobal.example",
     responseTime: "Responde en 3 h",
+    isDemo: true,
     sponsored: false,
   },
 ];

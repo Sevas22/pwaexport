@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FileCheck, Handshake, LayoutDashboard, Package, Plus, Send, Settings } from "lucide-react";
+import { FileCheck, FileSearch, Handshake, LayoutDashboard, Package, Plus, Send, Settings } from "lucide-react";
 import { LogoMark } from "@/components/Logo";
 import { Avatar, cn } from "@/components/ui";
 import { useAppStore, useHydrated } from "@/lib/store";
@@ -12,6 +12,7 @@ const groups = [
     label: "Exportar",
     items: [
       { href: "/panel", label: "Panel", icon: LayoutDashboard },
+      { href: "/informes", label: "Informes", icon: FileSearch },
       { href: "/documentos", label: "Documentos", icon: FileCheck },
       { href: "/operaciones", label: "Operaciones", icon: Package },
     ],
@@ -25,7 +26,8 @@ const groups = [
   },
 ];
 
-const mobileItems = [groups[0].items[0], groups[0].items[1], groups[0].items[2], ...groups[1].items];
+// En móvil caben cinco: Referidos queda a un toque desde el panel.
+const mobileItems = [...groups[0].items, groups[1].items[0]];
 
 export function AppNav() {
   const pathname = usePathname();
@@ -40,7 +42,7 @@ export function AppNav() {
   return (
     <>
       {/* Escritorio: barra lateral */}
-      <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col overflow-hidden bg-navy text-white lg:flex">
+      <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col overflow-hidden bg-navy text-white lg:flex print:lg:hidden">
         <CircuitDecoration />
         <Link href="/" className="relative flex items-center gap-3 px-6 pt-7 pb-8">
           <LogoMark className="size-9 ring-1 ring-white/10" />
@@ -117,7 +119,7 @@ export function AppNav() {
       </aside>
 
       {/* Móvil: cabecera y barra inferior */}
-      <header className="sticky top-0 z-30 flex h-14 items-center justify-between bg-navy px-4 text-white lg:hidden">
+      <header className="sticky top-0 z-30 flex h-14 items-center justify-between bg-navy px-4 text-white lg:hidden print:hidden">
         <Link href="/panel" className="flex items-center gap-2.5" aria-label="Ir al panel">
           <LogoMark className="size-8 ring-1 ring-white/10" />
           <span className="display text-base">Trader Marketer</span>
@@ -128,7 +130,7 @@ export function AppNav() {
       </header>
       <nav
         aria-label="Principal"
-        className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-rule bg-card/95 px-1 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_24px_-16px_rgb(var(--shadow-color)/0.3)] backdrop-blur lg:hidden"
+        className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-rule bg-card/95 px-1 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_24px_-16px_rgb(var(--shadow-color)/0.3)] backdrop-blur lg:hidden print:hidden"
       >
         {mobileItems.map(({ href, label, icon: Icon }) => (
           <Link

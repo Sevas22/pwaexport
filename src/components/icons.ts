@@ -4,6 +4,7 @@ import {
   Barcode,
   BrainCircuit,
   Briefcase,
+  Globe,
   Calculator,
   ClipboardList,
   CreditCard,
@@ -56,6 +57,7 @@ export const allyTypeIcons: Record<AllyTypeId, LucideIcon> = {
   "3pl": Warehouse,
   fulfillment: PackageCheck,
   broker: Briefcase,
+  comercializadora: Globe,
 };
 
 export const moduleIcons: Record<string, LucideIcon> = {

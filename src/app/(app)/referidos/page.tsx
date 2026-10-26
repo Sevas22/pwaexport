@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { FileText, Handshake, Mail, MessageCircle, Package, Quote, Send } from "lucide-react";
 import { formatDate } from "@/components/operations/OperationSummary";
+import { SelectMenu } from "@/components/SelectMenu";
 import { Avatar, Badge, Card, EmptyState, Loading, PageHeader, buttonStyles, cn } from "@/components/ui";
 import { getAlly } from "@/data/allies";
 import { getAllyType } from "@/data/catalog";
@@ -114,20 +115,18 @@ export default function ReferralsPage() {
                             </p>
                           </div>
                         </div>
-                        <label className="flex items-center gap-2 text-sm text-muted sm:flex-col sm:items-end">
-                          Cambiar estado
-                          <select
+                        <div className="flex items-center gap-2 text-sm text-muted sm:flex-col sm:items-end">
+                          <span id={`estado-${ref.id}`}>Cambiar estado</span>
+                          <SelectMenu
+                            label={`Estado del referido ${ref.code}`}
                             value={ref.status}
-                            onChange={(event) => setReferralStatus(ref.id, event.target.value as ReferralStatus)}
-                            className="h-9 rounded-xl border border-rule bg-card px-3 text-sm text-ink shadow-card focus:border-seal focus:outline-none"
-                          >
-                            {referralStatuses.map((status) => (
-                              <option key={status.id} value={status.id}>
-                                {status.label}
-                              </option>
-                            ))}
-                          </select>
-                        </label>
+                            onChange={(next) => setReferralStatus(ref.id, next as ReferralStatus)}
+                            options={referralStatuses.map((status) => ({ value: status.id, label: status.label }))}
+                            align="end"
+                            buttonClassName="h-9 justify-between gap-2 rounded-xl border border-rule bg-card px-3 text-sm text-ink shadow-card hover:border-seal/40"
+                            menuClassName="w-40"
+                          />
+                        </div>
                       </div>
 
                       {(operation || docNames.length > 0 || ref.note) && (

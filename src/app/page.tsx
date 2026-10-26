@@ -3,7 +3,6 @@ import {
   ArrowRight,
   Check,
   Factory,
-  FileCheck,
   Globe,
   Handshake,
   MousePointerClick,
@@ -17,6 +16,7 @@ import { Flag } from "@/components/Flag";
 import { allyTypeIcons } from "@/components/icons";
 import { CoreCircuit } from "@/components/landing/CoreCircuit";
 import { HeroMockup } from "@/components/landing/HeroMockup";
+import { HeroSearch } from "@/components/landing/HeroSearch";
 import { Logo, LogoMark } from "@/components/Logo";
 import { buttonStyles, cn } from "@/components/ui";
 import { allyTypes, markets, modeLabels, routes } from "@/data/catalog";
@@ -79,7 +79,7 @@ export default function HomePage() {
         <section className="relative">
           <div aria-hidden className="bg-blueprint absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black,transparent_75%)]" />
           <div aria-hidden className="absolute top-0 right-0 h-[32rem] w-[40rem] rounded-full bg-trace/10 blur-3xl" />
-          <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-4 pt-14 pb-20 sm:px-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:pt-20 lg:pb-28">
+          <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-4 pt-14 pb-12 sm:px-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:pt-20 lg:pb-14">
             <div className="animate-rise">
               <span className="inline-flex items-center gap-2 rounded-full border border-seal/20 bg-card px-3 py-1 text-sm shadow-card">
                 <span className="rounded-full bg-seal px-2 py-0.5 text-xs font-medium text-on-seal">TM Core AI</span>
@@ -92,16 +92,6 @@ export default function HomePage() {
                 Consulta los documentos que exige cada mercado, controla cada embarque paso a paso y conecta con agencias
                 aliadas de comercio exterior cuando lo necesites.
               </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Link href="/panel" className={buttonStyles("primary", "lg")}>
-                  Probar el demo
-                  <ArrowRight className="size-4" aria-hidden />
-                </Link>
-                <Link href="/documentos" className={buttonStyles("secondary", "lg")}>
-                  <FileCheck className="size-4" aria-hidden />
-                  Consultar documentos
-                </Link>
-              </div>
               <dl className="mt-10 grid max-w-md grid-cols-3 divide-x divide-rule border-t border-rule pt-6">
                 {[
                   { value: documents.length, label: "documentos" },
@@ -119,6 +109,10 @@ export default function HomePage() {
               </dl>
             </div>
             <HeroMockup />
+          </div>
+
+          <div className="relative mx-auto -mt-4 w-full max-w-4xl px-4 pb-16 sm:px-6 lg:-mt-8 lg:pb-24">
+            <HeroSearch />
           </div>
         </section>
 

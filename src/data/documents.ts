@@ -41,7 +41,7 @@ export const documents: ExportDocument[] = [
       "Incluye Incoterm, moneda, valor unitario y total, descripción comercial y datos completos del comprador.",
       "La descripción debe coincidir con la lista de empaque y el documento de transporte.",
     ],
-    helpers: ["agente-aduanas"],
+    helpers: ["agente-aduanas", "comercializadora"],
     source: DIAN,
   },
   {
@@ -55,7 +55,7 @@ export const documents: ExportDocument[] = [
     stage: "preparacion",
     requirement: "obligatorio",
     appliesTo: { modes: FORMAL_EXPORT },
-    helpers: ["operador-logistico", "3pl"],
+    helpers: ["operador-logistico", "3pl", "comercializadora"],
   },
   {
     id: "subpartida",
@@ -72,7 +72,7 @@ export const documents: ExportDocument[] = [
       "Los primeros 6 dígitos (código HS) son comunes en casi todo el mundo; el país destino agrega su propia extensión.",
       "Si hay dudas, la DIAN emite resoluciones de clasificación arancelaria anticipada.",
     ],
-    helpers: ["agente-aduanas", "broker"],
+    helpers: ["agente-aduanas", "broker", "comercializadora"],
     source: DIAN,
   },
   {
@@ -189,7 +189,7 @@ export const documents: ExportDocument[] = [
       me: "Etiqueta en árabe; en el Golfo aplican normas GSO.",
       latam: "Normas de rotulado de cada país, en español o portugués.",
     },
-    helpers: ["certificadora"],
+    helpers: ["certificadora", "comercializadora"],
   },
   {
     id: "gacc",
@@ -374,7 +374,7 @@ export const documents: ExportDocument[] = [
       me: "TLC con Israel: certificado de origen del acuerdo. Otros países: verifica acuerdos vigentes.",
       latam: "CAN, Alianza del Pacífico y Mercosur: certificado emitido por la DIAN, en varios casos digital.",
     },
-    helpers: ["agente-aduanas"],
+    helpers: ["agente-aduanas", "comercializadora"],
     source: DIAN,
   },
   {

@@ -4,6 +4,8 @@ import { useSyncExternalStore } from "react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { buildDemoData } from "@/data/demo";
+import type { ExportReport } from "@/lib/agent/types";
+import type { AppUser } from "@/lib/auth";
 import { initialChecklist } from "@/lib/requirements";
 import type {
   ChecklistStatus,
@@ -27,6 +29,13 @@ interface AppState {
   profile: CompanyProfile;
   operations: Operation[];
   referrals: Referral[];
+  /** Informes del agente guardados en este dispositivo (modo sin Supabase). */
+  reports: ExportReport[];
+  /** Cuenta local, solo cuando la app corre sin Supabase. */
+  account: AppUser | null;
+  setAccount: (account: AppUser | null) => void;
+  saveReport: (report: ExportReport) => void;
+  deleteReport: (reportId: string) => void;
   /** true cuando ya se cargaron (o descartaron) los datos de demostración. */
   seeded: boolean;
   loadDemo: () => void;
@@ -66,7 +75,16 @@ export const useAppStore = create<AppState>()(
       profile: emptyProfile,
       operations: [],
       referrals: [],
+      reports: [],
+      account: null,
       seeded: false,
+
+      setAccount: (account) => set({ account }),
+
+      saveReport: (report) =>
+        set({ reports: [report, ...get().reports.filter((item) => item.id !== report.id)].slice(0, 50) }),
+
+      deleteReport: (reportId) => set({ reports: get().reports.filter((item) => item.id !== reportId) }),
 
       loadDemo: () => set({ ...buildDemoData(), seeded: true }),
 
@@ -134,7 +152,14 @@ export const useAppStore = create<AppState>()(
       name: "trader-marketer",
       version: 2,
       skipHydration: true,
-      partialize: ({ profile, operations, referrals, seeded }) => ({ profile, operations, referrals, seeded }),
+      partialize: ({ profile, operations, referrals, reports, account, seeded }) => ({
+        profile,
+        operations,
+        referrals,
+        reports,
+        account,
+        seeded,
+      }),
       migrate: (persisted) => ({ ...(persisted as object), seeded: true }),
       // Primera visita: carga el demo para que la app no se vea vacía.
       onRehydrateStorage: () => (state) => {

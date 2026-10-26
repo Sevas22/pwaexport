@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Clock, LayoutGrid, MapPin, Search, Send, Sparkles } from "lucide-react";
+import { Clock, Globe, LayoutGrid, MapPin, Search, Send, Sparkles } from "lucide-react";
 import { Flag } from "@/components/Flag";
 import { allyTypeIcons } from "@/components/icons";
 import { ReferDialog, type ReferContext } from "@/components/referrals/ReferDialog";
-import { Avatar, EmptyState, Input, Select, buttonStyles, cn } from "@/components/ui";
+import { SelectMenu } from "@/components/SelectMenu";
+import { Avatar, EmptyState, Input, buttonStyles, cn } from "@/components/ui";
 import { allies } from "@/data/allies";
 import { allyTypes, getAllyType, getMarket, isAllyTypeId, isMarketId, markets } from "@/data/catalog";
 
@@ -40,7 +41,8 @@ export function AllyDirectory() {
         !normalized ||
         [ally.name, ally.city, ally.description, ...ally.services].some((text) => text.toLowerCase().includes(normalized)),
     )
-    .sort((a, b) => Number(b.sponsored) - Number(a.sponsored));
+    // Primero los aliados del ecosistema, luego los patrocinados, y al final los perfiles de muestra.
+    .sort((a, b) => Number(a.isDemo ?? false) - Number(b.isDemo ?? false) || Number(b.sponsored) - Number(a.sponsored));
 
   const typesWithAllies = allyTypes.filter((item) => allies.some((ally) => ally.type === item.id));
 
@@ -58,14 +60,22 @@ export function AllyDirectory() {
             className="h-12 pl-10"
           />
         </label>
-        <Select aria-label="Mercado" value={market ?? ""} onChange={(event) => setFilter("mercado", event.target.value)} className="h-12">
-          <option value="">Todos los mercados</option>
-          {markets.map((item) => (
-            <option key={item.id} value={item.id}>
-              {item.name}
-            </option>
-          ))}
-        </Select>
+        <SelectMenu
+          label="Mercado"
+          value={market ?? ""}
+          onChange={(next) => setFilter("mercado", next)}
+          options={[
+            { value: "", label: "Todos los mercados" },
+            ...markets.map((item) => ({
+              value: item.id,
+              label: item.name,
+              icon: <Flag market={item.id} className="h-3.5 w-5" />,
+            })),
+          ]}
+          align="end"
+          buttonClassName="h-12 w-full justify-between rounded-xl border border-rule bg-card px-3.5 text-ink shadow-card hover:border-muted/40"
+          menuClassName="w-full"
+        />
       </div>
 
       <div className="mt-4 -mx-4 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0">
@@ -103,17 +113,24 @@ export function AllyDirectory() {
               <li
                 key={ally.id}
                 className={cn(
-                  "group relative flex flex-col rounded-2xl border bg-card p-5 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-float",
+                  "group flex flex-col rounded-2xl border bg-card p-5 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-float",
                   ally.sponsored ? "border-amber/30" : "border-rule",
                 )}
               >
-                {ally.sponsored && (
-                  <span className="absolute top-4 right-4 inline-flex items-center gap-1 rounded-full bg-amber-tint px-2 py-0.5 text-xs font-medium text-amber">
-                    <Sparkles className="size-3" aria-hidden />
-                    Patrocinado
-                  </span>
+                {(ally.sponsored || ally.isDemo) && (
+                  <div className="mb-3 flex flex-wrap gap-1.5">
+                    {ally.sponsored && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-amber-tint px-2 py-0.5 text-xs font-medium text-amber">
+                        <Sparkles className="size-3" aria-hidden />
+                        Patrocinado
+                      </span>
+                    )}
+                    {ally.isDemo && (
+                      <span className="rounded-full bg-paper px-2 py-0.5 text-xs text-muted ring-1 ring-rule">Ejemplo</span>
+                    )}
+                  </div>
                 )}
-                <div className="flex items-center gap-3 pr-24">
+                <div className="flex items-center gap-3">
                   <Avatar name={ally.name} />
                   <div className="min-w-0">
                     <h2 className="flex items-center gap-1.5 font-semibold leading-snug">
@@ -143,10 +160,18 @@ export function AllyDirectory() {
                     <MapPin className="size-3.5" aria-hidden />
                     {ally.city}
                   </span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="size-3.5" aria-hidden />
-                    {ally.responseTime}
-                  </span>
+                  {ally.responseTime && (
+                    <span className="flex items-center gap-1">
+                      <Clock className="size-3.5" aria-hidden />
+                      {ally.responseTime}
+                    </span>
+                  )}
+                  {ally.website && (
+                    <span className="flex items-center gap-1">
+                      <Globe className="size-3.5" aria-hidden />
+                      {new URL(ally.website).hostname.replace("www.", "")}
+                    </span>
+                  )}
                   <span className="flex items-center gap-1" aria-label={`Mercados: ${ally.markets.map((id) => getMarket(id).name).join(", ")}`}>
                     {ally.markets.slice(0, 5).map((id) => (
                       <Flag key={id} market={id} className="h-3 w-[18px]" />

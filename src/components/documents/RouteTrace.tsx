@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUpRight, Ban, Check, CircleDashed, ChevronDown, Info, Landmark, LoaderCircle, Send, TriangleAlert } from "lucide-react";
+import { ArrowUpRight, Ban, Check, CircleDashed, Info, Landmark, LoaderCircle, Send, TriangleAlert } from "lucide-react";
 import { Flag } from "@/components/Flag";
 import { stageIcons } from "@/components/icons";
+import { SelectMenu } from "@/components/SelectMenu";
 import { getMarket } from "@/data/catalog";
 import type { StageGroup } from "@/lib/requirements";
 import type { ChecklistStatus, ExportDocument, MarketId } from "@/lib/types";
@@ -112,31 +113,33 @@ function StatusSelect({
   label: string;
   onChange: (status: ChecklistStatus) => void;
 }) {
-  const option = statusOptions.find((item) => item.id === value) ?? statusOptions[0];
-  const Icon = option.icon;
+  const current = statusOptions.find((item) => item.id === value) ?? statusOptions[0];
+
   return (
-    <span
-      className={cn(
-        "relative inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full pr-8 pl-3 text-sm font-medium ring-1 transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-seal",
-        option.className,
+    <SelectMenu
+      label={label}
+      value={value}
+      onChange={(next) => onChange(next as ChecklistStatus)}
+      options={statusOptions.map((item) => ({
+        value: item.id,
+        label: item.label,
+        icon: <item.icon className="size-4" aria-hidden />,
+      }))}
+      align="end"
+      className="shrink-0"
+      buttonClassName={cn(
+        "h-9 gap-1.5 rounded-full pr-2.5 pl-3 text-sm font-medium ring-1 transition-colors",
+        current.className,
       )}
+      menuClassName="w-44"
     >
-      <Icon className="size-4" aria-hidden />
-      {option.label}
-      <ChevronDown className="absolute right-2.5 size-4 opacity-60" aria-hidden />
-      <select
-        aria-label={label}
-        value={value}
-        onChange={(event) => onChange(event.target.value as ChecklistStatus)}
-        className="absolute inset-0 cursor-pointer appearance-none opacity-0"
-      >
-        {statusOptions.map((item) => (
-          <option key={item.id} value={item.id}>
-            {item.label}
-          </option>
-        ))}
-      </select>
-    </span>
+      {() => (
+        <>
+          <current.icon className="size-4" aria-hidden />
+          {current.label}
+        </>
+      )}
+    </SelectMenu>
   );
 }
 

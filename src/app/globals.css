@@ -169,6 +169,15 @@ body {
 }
 
 @layer base {
+  /* Las listas nativas que quedan (formularios) heredan el tema de la app:
+     sin esto, en modo oscuro el navegador las pinta en blanco. */
+  select,
+  option,
+  optgroup {
+    background-color: var(--card);
+    color: var(--ink);
+  }
+
   :focus-visible {
     outline: 2px solid var(--seal);
     outline-offset: 2px;
@@ -182,6 +191,47 @@ body {
   ::selection {
     background: var(--seal-tint);
     color: var(--seal-strong);
+  }
+}
+
+@media print {
+  /* Al imprimir siempre en claro, aunque la pantalla esté en modo oscuro.
+     Se fuerza la paleta completa: si el navegador descarta los fondos,
+     el texto sigue siendo oscuro y legible sobre el papel. */
+  :root {
+    --paper: #ffffff;
+    --card: #ffffff;
+    --ink: #111827;
+    --muted: #4b5563;
+    --rule: #d1d5db;
+    --seal: #1e7a4e;
+    --seal-strong: #145c3a;
+    --seal-tint: #e7f3ec;
+    --on-seal: #ffffff;
+    --trace: #1e7a4e;
+    --amber: #8a5200;
+    --amber-tint: #fcf2df;
+    --sky: #1f558f;
+    --sky-tint: #e8f0fa;
+    --rose: #b42318;
+    --rose-tint: #fdeceb;
+    --navy: #0b2239;
+    --navy-2: #133352;
+    --shadow-color: 255 255 255;
+  }
+
+  /* Por si queda algún bloque oscuro: su contenido se imprime en tinta. */
+  [class*="bg-navy"],
+  [class*="bg-navy"] * {
+    color: #111827 !important;
+  }
+
+  body {
+    background: #ffffff;
+  }
+
+  @page {
+    margin: 14mm;
   }
 }
 
