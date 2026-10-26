@@ -17,12 +17,13 @@ import {
   Truck,
 } from "lucide-react";
 import { AuthCard } from "@/components/auth/AuthCard";
-import { Flag } from "@/components/Flag";
+import { CountryFlag } from "@/components/CountryFlag";
 import { allyTypeIcons } from "@/components/icons";
 import { selectionToQuery } from "@/components/documents/ExportSentence";
 import { Term } from "@/components/Term";
 import { Badge, Card, IconTile, buttonStyles } from "@/components/ui";
 import { getAllyType, getMarket, modeLabels } from "@/data/catalog";
+import { getOrigin } from "@/data/countries";
 import type { ExportReport } from "@/lib/agent/types";
 
 // Vista del informe del agente: cabecera, hallazgos y, según la sesión,
@@ -31,6 +32,8 @@ import type { ExportReport } from "@/lib/agent/types";
 export function ReportView({ report, unlocked, authLoading }: { report: ExportReport; unlocked: boolean; authLoading: boolean }) {
   const market = getMarket(report.input.market);
   const destination = report.input.destinationCountry || market.name;
+  const origin = getOrigin(report.input.origin);
+  const originName = origin?.name ?? "Colombia";
   const { classification } = report;
   // El agente devuelve el producto como lo escribió la persona.
   const productTitle = classification.product.charAt(0).toUpperCase() + classification.product.slice(1);
@@ -50,10 +53,10 @@ export function ReportView({ report, unlocked, authLoading }: { report: ExportRe
             </div>
             <h1 className="display mt-4 text-balance text-3xl sm:text-4xl">{productTitle}</h1>
             <p className="mt-3 flex flex-wrap items-center gap-2 text-white/75">
-              <Flag market="co" />
-              Colombia
+              <CountryFlag code={report.input.origin} />
+              {originName}
               <span aria-hidden>→</span>
-              <Flag market={report.input.market} />
+              <CountryFlag code={report.input.destination} />
               {destination}
             </p>
           </div>
@@ -63,7 +66,7 @@ export function ReportView({ report, unlocked, authLoading }: { report: ExportRe
           <p className="eyebrow text-muted">Informe de exportación · Trader Marketer</p>
           <h1 className="display mt-1 text-2xl">{productTitle}</h1>
           <p className="mt-1 text-sm text-muted">
-            Colombia → {destination} · {modeLabels[report.selection.mode]} · Subpartida {classification.code} ·{" "}
+            {originName} → {destination} · {modeLabels[report.selection.mode]} · Subpartida {classification.code} ·{" "}
             {new Intl.DateTimeFormat("es-CO", { dateStyle: "long" }).format(new Date(report.createdAt))}
           </p>
         </header>
@@ -88,6 +91,16 @@ export function ReportView({ report, unlocked, authLoading }: { report: ExportRe
           </div>
         </div>
       </Card>
+
+      {origin?.coverage === "parcial" && (
+        <p className="flex gap-3 rounded-2xl border border-amber/25 bg-amber-tint p-4 text-sm text-amber">
+          <AlertTriangle className="mt-0.5 size-5 shrink-0" aria-hidden />
+          <span>
+            Nuestra base documental detallada es de exportaciones desde Colombia. Para {originName}, el informe cubre los
+            requisitos del país de destino; los trámites de salida confírmalos con un agente de aduanas local.
+          </span>
+        </p>
+      )}
 
       {report.summary.length > 0 && (
         <Card className="p-6 sm:p-8 print:break-inside-avoid print:border-0 print:p-0 print:pt-6">

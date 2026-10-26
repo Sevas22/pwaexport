@@ -7,7 +7,8 @@ import { AlertTriangle, ArrowLeft, Check, Loader, Sparkles } from "lucide-react"
 import { Logo } from "@/components/Logo";
 import { ReportView } from "@/components/report/ReportView";
 import { Card, IconTile, buttonStyles, cn } from "@/components/ui";
-import { getMarket, isMarketId, isRouteId } from "@/data/catalog";
+import { isRouteId } from "@/data/catalog";
+import { defaultDestination, defaultOrigin, getDestination, getOrigin } from "@/data/countries";
 import { useAuth } from "@/lib/auth";
 import { persistReport } from "@/lib/reports";
 import type { ExportReport } from "@/lib/agent/types";
@@ -23,8 +24,10 @@ export function ReportClient() {
   const { user, loading: authLoading } = useAuth();
 
   const query = (params.get("q") ?? "").slice(0, 160);
-  const marketParam = params.get("mercado");
-  const market = isMarketId(marketParam) ? marketParam : "us";
+  const originParam = params.get("desde") ?? "";
+  const origin = getOrigin(originParam) ? originParam : defaultOrigin;
+  const destinationParam = params.get("pais") ?? "";
+  const destination = getDestination(destinationParam) ? destinationParam : defaultDestination;
   const routeParam = params.get("ruta");
   const route = isRouteId(routeParam) ? routeParam : "ordinaria";
 
@@ -35,8 +38,8 @@ export function ReportClient() {
   const persisted = useRef("");
 
   useEffect(() => {
-    if (!query || requested.current === `${query}|${market}|${route}`) return;
-    requested.current = `${query}|${market}|${route}`;
+    if (!query || requested.current === `${query}|${origin}|${destination}|${route}`) return;
+    requested.current = `${query}|${origin}|${destination}|${route}`;
     setReport(null);
     setError("");
     setPhase(0);
@@ -46,7 +49,7 @@ export function ReportClient() {
     fetch("/api/informe", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query, market, route, mode: params.get("modo") ?? undefined }),
+      body: JSON.stringify({ query, origin, destination, route, mode: params.get("modo") ?? undefined }),
     })
       .then(async (response) => {
         const data = await response.json();
@@ -57,7 +60,7 @@ export function ReportClient() {
       .finally(() => clearInterval(timer));
 
     return () => clearInterval(timer);
-  }, [query, market, route, params]);
+  }, [query, origin, destination, route, params]);
 
   // Al tener cuenta, el informe queda guardado en el historial del usuario.
   useEffect(() => {
@@ -100,7 +103,7 @@ export function ReportClient() {
           </Link>
         </Card>
       ) : !report ? (
-        <GeneratingState query={query} market={market} phase={phase} />
+        <GeneratingState query={query} destination={destination} phase={phase} />
       ) : (
         <ReportView report={report} unlocked={Boolean(user)} authLoading={authLoading} />
       )}
@@ -108,7 +111,7 @@ export function ReportClient() {
   );
 }
 
-function GeneratingState({ query, market, phase }: { query: string; market: string; phase: number }) {
+function GeneratingState({ query, destination, phase }: { query: string; destination: string; phase: number }) {
   return (
     <Card className="mt-8 overflow-hidden">
       <div className="relative bg-navy px-6 py-10 text-center text-white sm:px-10">
@@ -121,7 +124,7 @@ function GeneratingState({ query, market, phase }: { query: string; market: stri
           </span>
           <h1 className="display mt-5 text-balance text-2xl sm:text-3xl">{query}</h1>
           <p className="mt-2 text-white/70">
-            Analizando la exportación hacia {isMarketId(market) ? getMarket(market).name : "tu mercado"}
+            Analizando la exportación hacia {getDestination(destination)?.name ?? "tu mercado"}
           </p>
         </div>
       </div>

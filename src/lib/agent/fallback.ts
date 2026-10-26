@@ -1,4 +1,5 @@
-import { ORIGIN, getMarket, modeLabels } from "@/data/catalog";
+import { getMarket, modeLabels } from "@/data/catalog";
+import { getOrigin } from "@/data/countries";
 import { documentsFor } from "@/lib/requirements";
 import { classifyWithRules, selectionFor } from "@/lib/agent/knowledge";
 import type { ExportReport, ReportInput } from "@/lib/agent/types";
@@ -11,10 +12,14 @@ export function buildBaseReport(input: ReportInput, id: string): ExportReport {
   const classification = classifyWithRules(input.query);
   const selection = selectionFor(input, classification.category);
   const market = getMarket(selection.market);
-  const docs = documentsFor(selection);
+  const partialOrigin = getOrigin(input.origin)?.coverage === "parcial";
+  const allDocs = documentsFor(selection);
+  const docs = partialOrigin ? allDocs.filter((doc) => doc.stage === "transporte" || doc.stage === "destino") : allDocs;
   const required = docs.filter((doc) => doc.requirement === "obligatorio");
   const conditional = docs.filter((doc) => doc.requirement === "condicional");
   const destination = input.destinationCountry?.trim() || market.name;
+  const originCountry = getOrigin(input.origin);
+  const originName = originCountry?.name ?? "Colombia";
   const allyTypes = [...new Set(docs.flatMap((doc) => doc.helpers))] as AllyTypeId[];
 
   return {
@@ -24,8 +29,12 @@ export function buildBaseReport(input: ReportInput, id: string): ExportReport {
     selection,
     classification,
     summary: [
-      `Para exportar ${classification.product} desde ${ORIGIN.country} a ${destination} necesitas ${docs.length} documentos: ${required.length} obligatorios y ${conditional.length} que dependen de tu caso.`,
-      `Acuerdo comercial aplicable: ${market.agreements}.`,
+      partialOrigin
+        ? `Para llevar ${classification.product} de ${originName} a ${destination} identificamos ${docs.length} documentos de transporte e ingreso al destino. Los trámites de salida de ${originName} los confirma un agente de aduanas local.`
+        : `Para exportar ${classification.product} desde ${originName} a ${destination} necesitas ${docs.length} documentos: ${required.length} obligatorios y ${conditional.length} que dependen de tu caso.`,
+      partialOrigin
+        ? `Verifica qué acuerdo comercial cubre a ${originName} con ${destination}: los que aparecen en la plataforma son los de Colombia.`
+        : `Acuerdo comercial aplicable: ${market.agreements}.`,
       `El etiquetado del producto debe ir en ${market.labelLanguage.toLowerCase()}.`,
       `Subpartida sugerida ${classification.code} (${classification.description}); confírmala con tu agente de aduanas.`,
     ],
@@ -61,6 +70,11 @@ export function buildBaseReport(input: ReportInput, id: string): ExportReport {
       { title: "Financiero", detail: "Comisiones bancarias, diferencia cambiaria y, si lo necesitas, el costo del factoring." },
     ],
     risks: [
+      ...(originCountry?.coverage === "parcial"
+        ? [
+            `El checklist documental de esta versión corresponde a exportaciones desde Colombia. Para salir de ${originName}, confirma los trámites con un agente de aduanas local.`,
+          ]
+        : []),
       "Clasificar mal la subpartida cambia aranceles y vistos buenos, y puede detener la carga.",
       "Documentos con datos distintos entre factura, lista de empaque y documento de transporte generan demoras en aduana.",
       "Requisitos sanitarios o de etiquetado del destino que se descubren tarde obligan a reempacar o reetiquetar.",

@@ -1,5 +1,3 @@
-import type { MarketId } from "@/lib/types";
-
 // Sugerencias del buscador: productos frecuentes de exportación colombiana.
 // Sirven para que la persona no se quede en blanco y vea qué puede escribir.
 
@@ -50,10 +48,10 @@ export function filterSuggestions(query: string, limit = 6): ProductSuggestion[]
     .slice(0, limit);
 }
 
-/** Ejemplos que se muestran debajo del buscador cuando está vacío. */
-export const searchExamples: { query: string; market: MarketId; label: string }[] = [
-  { query: "Café tostado en grano", market: "us", label: "Café tostado → EE. UU." },
-  { query: "0901.21", market: "eu", label: "Partida 0901.21 → UE" },
-  { query: "Mochilas tejidas a mano", market: "us", label: "Artesanías → EE. UU." },
-  { query: "Crema facial natural", market: "eu", label: "Cosméticos → UE" },
+/** Ejemplos que se muestran debajo del buscador. */
+export const searchExamples: { query: string; destination: string; label: string }[] = [
+  { query: "Café tostado en grano", destination: "us", label: "Café tostado → EE. UU." },
+  { query: "0901.21", destination: "es", label: "Partida 0901.21 → España" },
+  { query: "Mochilas tejidas a mano", destination: "us", label: "Artesanías → EE. UU." },
+  { query: "Crema facial natural", destination: "nl", label: "Cosméticos → Países Bajos" },
 ];

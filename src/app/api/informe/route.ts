@@ -1,7 +1,8 @@
 import type { NextRequest } from "next/server";
 import { generateReport } from "@/lib/agent";
 import { isGroqConfigured } from "@/lib/env";
-import { isMarketId, isRouteId, modesFor } from "@/data/catalog";
+import { isRouteId, modesFor } from "@/data/catalog";
+import { defaultDestination, defaultOrigin, getDestination, getOrigin, marketOf } from "@/data/countries";
 import type { ReportInput } from "@/lib/agent/types";
 import type { TransportMode } from "@/lib/types";
 
@@ -45,17 +46,21 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "Escribe el producto o la partida arancelaria que quieres exportar." }, { status: 400 });
   }
 
-  const market = isMarketId(body.market) ? body.market : "us";
+  const origin = getOrigin(String(body.origin ?? "")) ? String(body.origin) : defaultOrigin;
+  const destinationCode = getDestination(String(body.destination ?? "")) ? String(body.destination) : defaultDestination;
+  const market = marketOf(destinationCode);
   const route = isRouteId(body.route) ? body.route : "ordinaria";
   const modes = modesFor(route, market);
   const mode = modes.includes(body.mode as TransportMode) ? (body.mode as TransportMode) : modes[0];
 
   const input: ReportInput = {
     query,
+    origin,
+    destination: destinationCode,
     market,
     route,
     mode,
-    destinationCountry: String(body.destinationCountry ?? "").trim().slice(0, 80) || undefined,
+    destinationCountry: getDestination(destinationCode)?.name,
   };
 
   try {

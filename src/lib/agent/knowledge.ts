@@ -16,9 +16,15 @@ export function selectionFor(input: ReportInput, category: CategoryId): ExportSe
   };
 }
 
-export function knowledgeContext(selection: ExportSelection) {
+/** Etapas que no dependen del país de salida: valen para cualquier origen. */
+const originAgnosticStages = ["transporte", "destino"];
+
+export function knowledgeContext(selection: ExportSelection, options?: { onlyOriginAgnostic?: boolean }) {
   const market = getMarket(selection.market);
-  const docs = documentsFor(selection);
+  const all = documentsFor(selection);
+  // Con otro origen, los trámites de salida colombianos no aplican y no se le
+  // entregan al agente: si los ve, termina atribuyéndolos al país equivocado.
+  const docs = options?.onlyOriginAgnostic ? all.filter((doc) => originAgnosticStages.includes(doc.stage)) : all;
 
   return {
     origen: ORIGIN.country,

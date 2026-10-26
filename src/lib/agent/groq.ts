@@ -3,6 +3,7 @@ import Groq from "groq-sdk";
 import { groqApiKey, groqModel, groqModelFast, isGroqConfigured } from "@/lib/env";
 import { categoryOptions, hsReference, knowledgeContext, selectionFor } from "@/lib/agent/knowledge";
 import { getCategory, getMarket } from "@/data/catalog";
+import { getOrigin } from "@/data/countries";
 import type { ExportReport, HsClassification, ReportInput } from "@/lib/agent/types";
 import type { AllyTypeId, CategoryId } from "@/lib/types";
 import { allyTypes } from "@/data/catalog";
@@ -102,8 +103,20 @@ export async function writeReportWithAgent(
   id: string,
 ): Promise<ExportReport> {
   const selection = selectionFor(input, classification.category);
-  const context = knowledgeContext(selection);
+  const partialOrigin = getOrigin(input.origin)?.coverage === "parcial";
+  const context = knowledgeContext(selection, { onlyOriginAgnostic: partialOrigin });
   const destination = input.destinationCountry?.trim() || getMarket(input.market).name;
+  const originCountry = getOrigin(input.origin);
+  const originName = originCountry?.name ?? "Colombia";
+  const originNote =
+    originCountry?.coverage === "parcial"
+      ? `
+REGLAS ADICIONALES PORQUE LA EXPORTACIÓN SALE DE ${originName.toUpperCase()}, NO DE COLOMBIA:
+- Jamás menciones entidades colombianas (DIAN, ICA, INVIMA, VUCE, Banco de la República) ni documentos colombianos (SAE, DEX, declaración de cambio). No existen en ${originName}.
+- No digas que aplica un acuerdo comercial firmado por Colombia. Si no estás seguro de qué acuerdo cubre a ${originName}, escribe que debe verificarse.
+- Para los trámites de salida escribe "la autoridad aduanera de ${originName}" salvo que estés seguro de su nombre, y añade "verificar con un agente de aduanas local".
+- El contexto documental que te entregamos solo cubre el transporte y el ingreso al destino: no inventes trámites de salida detallados.`
+      : "";
 
   const completion = await client().chat.completions.create({
     model: groqModel,
@@ -117,10 +130,12 @@ export async function writeReportWithAgent(
 
 Producto: ${classification.product} (subpartida sugerida ${classification.code} – ${classification.description})
 Categoría: ${getCategory(classification.category).name}
-Origen: Colombia · Destino: ${destination} (${context.mercado.nombre})
+Origen: ${originName} · Destino: ${destination} (mercado ${context.mercado.nombre})
 Modalidad: ${context.modo}
 Acuerdos vigentes del destino: ${context.mercado.acuerdos}
 Idioma de etiquetado: ${context.mercado.idiomaEtiquetado}
+
+${originNote}
 
 Documentos de la base de la plataforma para este caso (usa estos ids en "documents"):
 ${JSON.stringify(context.documentos)}

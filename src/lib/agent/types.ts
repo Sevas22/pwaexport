@@ -4,9 +4,15 @@ import type { AllyTypeId, CategoryId, ExportSelection, MarketId, RouteId, Transp
 export interface ReportInput {
   /** Nombre del producto o partida arancelaria. */
   query: string;
+  /** Código del país desde el que se exporta. */
+  origin: string;
+  /** Código del país de destino. */
+  destination: string;
+  /** Mercado al que pertenece el destino, para la base documental. */
   market: MarketId;
   route: RouteId;
   mode: TransportMode;
+  /** Nombre del país de destino, para mostrar. */
   destinationCountry?: string;
 }
 
