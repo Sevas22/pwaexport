@@ -24,6 +24,7 @@ import { Term } from "@/components/Term";
 import { Badge, Card, IconTile, buttonStyles } from "@/components/ui";
 import { getAllyType, getMarket, modeLabels } from "@/data/catalog";
 import { getOrigin } from "@/data/countries";
+import { site } from "@/data/site";
 import type { ExportReport } from "@/lib/agent/types";
 
 // Vista del informe del agente: cabecera, hallazgos y, según la sesión,
@@ -63,7 +64,7 @@ export function ReportView({ report, unlocked, authLoading }: { report: ExportRe
         </div>
 
         <header className="hidden border-b border-rule px-6 pb-4 print:block">
-          <p className="eyebrow text-muted">Informe de exportación · Trader Marketer</p>
+          <p className="eyebrow text-muted">Informe de exportación · {site.name}</p>
           <h1 className="display mt-1 text-2xl">{productTitle}</h1>
           <p className="mt-1 text-sm text-muted">
             {originName} → {destination} · {modeLabels[report.selection.mode]} · Subpartida {classification.code} ·{" "}

@@ -1,4 +1,5 @@
 import { cn } from "@/components/ui";
+import { site } from "@/data/site";
 
 export function LogoMark({ className }: { className?: string }) {
   return (
@@ -17,11 +18,7 @@ export function Logo({ className }: { className?: string }) {
   return (
     <span className={cn("flex items-center gap-2.5", className)}>
       <LogoMark />
-      <span className="display text-[1.05rem] leading-none">
-        Trader
-        <br />
-        Marketer
-      </span>
+      <span className="display text-[1.15rem] leading-none">{site.name}</span>
     </span>
   );
 }

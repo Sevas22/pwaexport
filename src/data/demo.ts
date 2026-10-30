@@ -77,7 +77,7 @@ export function buildDemoData() {
   const referrals: Referral[] = [
     {
       id: "demo-ref-1",
-      code: "TM-8K2P4Q",
+      code: "PZ-8K2P4Q",
       allyId: "sello-verde",
       operationId: "demo-op-cacao",
       documentIds: ["eudr"],
@@ -88,7 +88,7 @@ export function buildDemoData() {
     },
     {
       id: "demo-ref-2",
-      code: "TM-R7W3JD",
+      code: "PZ-R7W3JD",
       allyId: "rumbo-carga",
       operationId: "demo-op-cafe",
       documentIds: ["bl", "poliza-transporte"],
@@ -99,7 +99,7 @@ export function buildDemoData() {
     },
     {
       id: "demo-ref-3",
-      code: "TM-5NHX2C",
+      code: "PZ-5NHX2C",
       allyId: "cordillera-aduanas",
       operationId: "demo-op-cafe",
       documentIds: ["sae", "dex"],
@@ -110,7 +110,7 @@ export function buildDemoData() {
     },
     {
       id: "demo-ref-4",
-      code: "TM-Q4LM9T",
+      code: "PZ-Q4LM9T",
       allyId: "bahia-fulfillment",
       operationId: "demo-op-mochilas",
       documentIds: ["importador-registro"],

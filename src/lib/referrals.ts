@@ -1,5 +1,6 @@
 import { getMarket, getCategory, modeLabels } from "@/data/catalog";
 import { getDocument } from "@/lib/requirements";
+import { site } from "@/data/site";
 import type { Tone } from "@/components/ui";
 import type { Ally, CompanyProfile, Operation, Referral, ReferralStatus } from "@/lib/types";
 
@@ -34,7 +35,7 @@ export function referralMessage(
   const lines = [
     `Hola, ${ally.name}.`,
     "",
-    `Les refiero una exportación desde Trader Marketer. Código de referido: ${referral.code}`,
+    `Les refiero una exportación desde ${site.name}. Código de referido: ${referral.code}`,
   ];
 
   if (operation) {

@@ -3,10 +3,10 @@ import type { MetadataRoute } from "next";
 export default function manifest(): MetadataRoute.Manifest {
   return {
     id: "/panel",
-    name: "Trader Marketer",
-    short_name: "Trader",
+    name: "Puzztraid",
+    short_name: "Puzztraid",
     description:
-      "Documentos de exportación, operaciones y referidos a agencias aliadas de comercio exterior.",
+      "Encuentre compradores: informes de exportación, documentos, operaciones y red de aliados.",
     lang: "es",
     start_url: "/panel",
     scope: "/",

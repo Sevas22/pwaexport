@@ -23,13 +23,13 @@ const plexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Trader Marketer · Exporta con los documentos en regla",
-    template: "%s · Trader Marketer",
+    default: "Puzztraid · Encuentre compradores para su producto",
+    template: "%s · Puzztraid",
   },
   description:
     "Consulta qué documentos necesita tu exportación, controla cada operación y conecta con agencias aliadas de comercio exterior.",
-  applicationName: "Trader Marketer",
-  appleWebApp: { capable: true, title: "Trader Marketer", statusBarStyle: "default" },
+  applicationName: "Puzztraid",
+  appleWebApp: { capable: true, title: "Puzztraid", statusBarStyle: "default" },
 };
 
 export const viewport: Viewport = {

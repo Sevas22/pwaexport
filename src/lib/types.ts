@@ -1,4 +1,4 @@
-// Modelo de dominio de Trader Marketer.
+// Modelo de dominio de Puzztraid.
 // Los datos de referencia (documentos, mercados, aliados) viven en src/data;
 // los datos del usuario (operaciones, referidos, perfil) en src/lib/store.ts.
 

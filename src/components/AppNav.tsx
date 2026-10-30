@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FileCheck, FileSearch, Handshake, LayoutDashboard, Package, Plus, Send, Settings } from "lucide-react";
+import { ExternalLink, FileCheck, FileSearch, Handshake, LayoutDashboard, Package, Plus, Send, Settings } from "lucide-react";
 import { LogoMark } from "@/components/Logo";
 import { Avatar, cn } from "@/components/ui";
+import { site } from "@/data/site";
 import { useAppStore, useHydrated } from "@/lib/store";
 
 const groups = [
@@ -46,11 +47,7 @@ export function AppNav() {
         <CircuitDecoration />
         <Link href="/" className="relative flex items-center gap-3 px-6 pt-7 pb-8">
           <LogoMark className="size-9 ring-1 ring-white/10" />
-          <span className="display text-[1.05rem] leading-tight">
-            Trader
-            <br />
-            Marketer
-          </span>
+          <span className="display text-[1.05rem] leading-tight">{site.name}</span>
         </Link>
 
         <div className="relative px-4">
@@ -101,6 +98,13 @@ export function AppNav() {
 
         <div className="relative mt-auto p-4">
           <Link
+            href="/"
+            className="mb-2 flex items-center gap-3 rounded-xl px-3 py-2 text-[0.93rem] text-white/65 transition-colors hover:bg-white/5 hover:text-white"
+          >
+            <ExternalLink className="size-[1.1rem] text-white/50" aria-hidden />
+            Ver el sitio
+          </Link>
+          <Link
             href="/perfil"
             aria-current={isActive("/perfil") ? "page" : undefined}
             className={cn(
@@ -122,7 +126,7 @@ export function AppNav() {
       <header className="sticky top-0 z-30 flex h-14 items-center justify-between bg-navy px-4 text-white lg:hidden print:hidden">
         <Link href="/panel" className="flex items-center gap-2.5" aria-label="Ir al panel">
           <LogoMark className="size-8 ring-1 ring-white/10" />
-          <span className="display text-base">Trader Marketer</span>
+          <span className="display text-base">{site.name}</span>
         </Link>
         <Link href="/perfil" aria-label="Mi empresa" className="rounded-lg">
           <Avatar name={company} size="sm" />

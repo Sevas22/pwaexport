@@ -9,6 +9,7 @@ import { Avatar, Card, IconTile, RequirementBadge } from "@/components/ui";
 import { allies, getAlly } from "@/data/allies";
 import { documents } from "@/data/documents";
 import { getAllyType, getMarket } from "@/data/catalog";
+import { navigation } from "@/data/navigation";
 
 export function generateStaticParams() {
   return allies.map((ally) => ({ id: ally.id }));
@@ -28,6 +29,12 @@ export default async function AllyPage({ params }: PageProps<"/aliados/[id]">) {
   const type = getAllyType(ally.type);
   const TypeIcon = allyTypeIcons[ally.type];
   const helpsWith = documents.filter((doc) => doc.helpers.includes(ally.type));
+  // Secciones del sitio donde este tipo de aliado aparece como quien resuelve.
+  const appearsIn = navigation.flatMap((section) =>
+    section.children
+      .filter((child) => child.allyTypes?.includes(ally.type))
+      .map((child) => ({ section, child })),
+  );
 
   return (
     <article>
@@ -145,6 +152,27 @@ export default async function AllyPage({ params }: PageProps<"/aliados/[id]">) {
         </div>
 
         <aside className="flex flex-col gap-6 lg:sticky lg:top-24 lg:self-start">
+          {appearsIn.length > 0 && (
+            <Card className="p-6">
+              <h2 className="text-sm font-semibold">Aparece en</h2>
+              <ul className="mt-3 flex flex-col gap-2">
+                {appearsIn.map(({ section, child }) => (
+                  <li key={`${section.slug}/${child.slug}`}>
+                    <Link
+                      href={child.href ?? `/${section.slug}/${child.slug}`}
+                      className="group flex items-center justify-between gap-2 text-sm hover:text-seal-strong"
+                    >
+                      <span>
+                        <span className="text-muted">{section.label} · </span>
+                        {child.label}
+                      </span>
+                      <ArrowUpRight className="size-3.5 shrink-0 text-muted group-hover:text-seal" aria-hidden />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          )}
           <Card className="p-6">
             <div className="grid grid-cols-3 gap-2 text-center">
               {[

@@ -8,6 +8,7 @@ import { SelectMenu } from "@/components/SelectMenu";
 import { Avatar, Field, Input, Textarea, buttonStyles, cn } from "@/components/ui";
 import { allies, getAlly } from "@/data/allies";
 import { getAllyType } from "@/data/catalog";
+import { site } from "@/data/site";
 import { alliesFor, getDocument } from "@/lib/requirements";
 import { mailtoLink, referralMessage, whatsappLink } from "@/lib/referrals";
 import { useAppStore } from "@/lib/store";
@@ -276,7 +277,7 @@ function ReferFlow({ context, onClose }: { context: ReferContext; onClose: () =>
             {message}
           </pre>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-            <a href={mailtoLink(ally.email, `Referido ${referral.code} · Trader Marketer`, message)} className={buttonStyles("primary", "sm")}>
+            <a href={mailtoLink(ally.email, `Referido ${referral.code} · ${site.name}`, message)} className={buttonStyles("primary", "sm")}>
               <Mail className="size-4" aria-hidden />
               Enviar por correo
             </a>

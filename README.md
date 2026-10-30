@@ -1,4 +1,4 @@
-# Trader Marketer
+# Puzztraid
 
 PWA para pymes latinoamericanas que exportan. Muestra qué documentos necesita cada exportación, sigue el avance de cada operación y refiere al exportador a agencias aliadas de comercio exterior.
 
@@ -60,7 +60,7 @@ Sin esas variables la app funciona en modo demostración: el registro ocurre igu
 - `/documentos`: asistente documental. La selección queda en la URL para compartirla. Cada documento tiene su ficha en `/documentos/[id]`.
 - `/operaciones`: expedientes de exportación con checklist por documento (pendiente, en trámite, listo, no aplica).
 - `/aliados`: directorio con filtros por servicio y mercado. Cada aliado tiene su perfil en `/aliados/[id]`.
-- `/referidos`: historial con código `TM-XXXXXX` y estado (enviado, contactado, en proceso, cerrado, descartado).
+- `/referidos`: historial con código `PZ-XXXXXX` y estado (enviado, contactado, en proceso, cerrado, descartado).
 - `/perfil`: datos de la empresa que se incluyen en cada referido.
 
 ## Datos y persistencia

@@ -8,6 +8,7 @@ import { SelectMenu } from "@/components/SelectMenu";
 import { Avatar, Badge, Card, EmptyState, Loading, PageHeader, buttonStyles, cn } from "@/components/ui";
 import { getAlly } from "@/data/allies";
 import { getAllyType } from "@/data/catalog";
+import { site } from "@/data/site";
 import { getDocument } from "@/lib/requirements";
 import { mailtoLink, referralMessage, referralStatusLabel, referralStatuses, referralTone, whatsappLink } from "@/lib/referrals";
 import { useAppStore, useHydrated } from "@/lib/store";
@@ -173,7 +174,7 @@ export default function ReferralsPage() {
                         {ally && (
                           <div className="-ml-3 flex flex-wrap gap-1 sm:ml-0">
                             <a
-                              href={mailtoLink(ally.email, `Referido ${ref.code} · Trader Marketer`, message)}
+                              href={mailtoLink(ally.email, `Referido ${ref.code} · ${site.name}`, message)}
                               className={buttonStyles("ghost", "sm")}
                             >
                               <Mail className="size-4" aria-hidden />

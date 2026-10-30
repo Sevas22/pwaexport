@@ -114,7 +114,7 @@ export function HeroMockup() {
           <span className="min-w-0 text-xs">
             <span className="block truncate font-semibold">Sello Verde Certificaciones</span>
             <span className="block text-muted">Trazabilidad EUDR</span>
-            <span className="block font-mono text-[0.68rem] text-seal">TM-8K2P4Q</span>
+            <span className="block font-mono text-[0.68rem] text-seal">PZ-8K2P4Q</span>
           </span>
         </div>
       </div>
